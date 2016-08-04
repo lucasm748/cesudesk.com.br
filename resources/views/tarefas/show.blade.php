@@ -140,28 +140,31 @@
                                 </div>
                             </div>
                             @else
-                            <table class="table table-striped table-hover table-responsive table-condensed">
+                            <table id="tbtriagens" class="table table-striped table-hover table-responsive table-condensed">
                                 <thead>
                                     <tr>
-                                        <td>ID</td>
                                         <td>Usuário</td>
                                         <td>Descrição</td>
                                         <td>Início</td>
                                         <td>Fechamento</td>
                                         <td>Horas gastas</td>
                                         <td>Status</td>
+                                        <td>Ações</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($tarefa->triagens as $triagem)
                                     <tr>
-                                        <td>{{ $triagem->id}}</td>
                                         <td>{{ $triagem->usuario->login}}</td>
                                         <td>{{ $triagem->descricao}}</td>
                                         <td>{{ $triagem->dh_inicio_triagem}}</td>
                                         <td>{{ $triagem->dh_fim_triagem}}</td>
                                         <td>{{ $triagem->qt_horas}}</td>
                                         <td>{{ $triagem->tp_status}}</td>
+                                        <td>
+                        <a href="#" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a>
+                            <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -169,7 +172,7 @@
                             @endif
                             <!-- Modal -->
                             <div id="triagens" role="dialog" class="modal fade">
-                            <div class="modal-dialog">
+                                <div class="modal-dialog">
                                     <!-- Modal content-->
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -180,14 +183,21 @@
                                             <div id="triagem-area">
                                                 <div class="form-group">
                                                     <label class="control-label">Descrição</label>
-                                                    <input type="text" class="form-control" placeholder="Breve descrição sobre a finalidade da triagem">
+                                                    <input id="desctri" type="text" class="form-control" placeholder="Breve descrição sobre a finalidade da triagem">
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">Usuário</label>
-                                                    <select name="usuario" class="form-control">
-                                                        <option value="1">Usuario 1</option>
-                                                        <option value="2">Usuario 2</option>
-                                                    </select>
+                                                <div class="col-md-4">
+                                                    <label class="control-label">Usuário</label>
+                                                    <?php  $usuTri = (int) $triagem->id_usuario;
+                                                    echo Form::select('id_usuario', $usuariosTriagem, $usuTri, [
+                                                    'placeholder' => 'Selecione o usuário',
+                                                    'class' => 'form-control',
+                                                    'required' => 'true',
+                                                    'id' => 'usutri'
+                                                    ]);
+                                                    ?>
+                                                </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -196,7 +206,7 @@
                                                         <script>
                                                         $(function() {
                                                         $('#dh_inicio_triagem').datetimepicker({
-                                                        dateFormat: 'dd/mm/yy H:i:s',
+                                                        dateFormat: 'dd/mm/yy',
                                                         showOtherMonths: true,
                                                         selectOtherMonths: true,
                                                         showButtonPanel:true,
@@ -215,7 +225,7 @@
                                                         <script>
                                                         $(function() {
                                                         $('#dh_fim_triagem').datetimepicker({
-                                                        dateFormat: 'dd/mm/yy H:i:s',
+                                                        dateFormat: 'dd/mm/yy',
                                                         showOtherMonths: true,
                                                         selectOtherMonths: true,
                                                         showButtonPanel:true,
@@ -232,115 +242,144 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-md btn-primary">Salvar</button>
+                                            <button type="button" class="btn btn-md btn-primary" onclick="addTriagem()">Salvar</button>
+<script type="text/javascript">
+    (function($) {
+  addTriagem = function() {
+
+    var newRow = $("<tr>");
+    var cols = "";
+    var triagem = [];
+    triagem["descricao"] = $('#desctri').val();
+    triagem["usuario"] = $('#usutri').val();
+    triagem["inicio"] = $('#dh_inicio_triagem').val();
+    triagem["fim"] = $('#dh_fim_triagem').val();
+    triagem["horasgastas"] = 0;
+    triagem["statustriagem"] = 'A';
+
+    cols += '<td>'+triagem["usuario"]+'</td>';
+    cols += '<td>'+triagem["descricao"]+'</td>';
+    cols += '<td>'+triagem["inicio"]+'</td>';
+    cols += '<td>'+triagem["fim"]+'</td>';
+    cols += '<td>'+triagem["horasgastas"]+'</td>';
+    cols += '<td>'+triagem["statustriagem"]+'</td>';
+    cols += '<td>';
+    cols += '<a href="#" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a><button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>';
+    cols += '</td>';
+
+    newRow.append(cols);
+    $("#tbtriagens").append(newRow);
+
+    return false;
+  };
+})(jQuery);
+</script>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                         </div>
+                                    </div>
                                 </div>
                             </div>
-                            </div>
-                            </div>
-
-                        </div>
-                        </div>
-                        <div class="form-group">
-                            <input class="btn btn-success" type="submit" value="Salvar"/>
-                            <a class="btn btn-danger" type="reset" href="/tarefas">Cancelar</a>
                         </div>
                     </div>
-                    </form>
-                    </div>
-
-                    <style type="text/css" media="screen">
-                    .panel.with-nav-tabs .panel-heading{
-                    padding: 5px 5px 0 5px;
-                    }
-                    .panel.with-nav-tabs .nav-tabs{
-                    border-bottom: none;
-                    }
-                    .panel.with-nav-tabs .nav-justified{
-                    margin-bottom: -1px;
-                    }
-                    /********************************************************************/
-                    /*** PANEL DEFAULT ***/
-                    .with-nav-tabs.panel-default .nav-tabs > li > a,
-                    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-                    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-                    color: #777;
-                    }
-                    .with-nav-tabs.panel-default .nav-tabs > .open > a,
-                    .with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
-                    .with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
-                    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-                    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-                    color: #777;
-                    background-color: #ddd;
-                    border-color: transparent;
-                    }
-                    .with-nav-tabs.panel-default .nav-tabs > li.active > a,
-                    .with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
-                    .with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
-                    color: #555;
-                    background-color: #fff;
-                    border-color: #ddd;
-                    border-bottom-color: transparent;
-                    }
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
-                    background-color: #f5f5f5;
-                    border-color: #ddd;
-                    }
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
-                    color: #777;
-                    }
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-                    background-color: #ddd;
-                    }
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-                    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-                    color: #fff;
-                    background-color: #555;
-                    }
-                    /********************************************************************/
-                    /*** PANEL PRIMARY ***/
-                    .with-nav-tabs.panel-primary .nav-tabs > li > a,
-                    .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
-                    .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
-                    color: #fff;
-                    }
-                    .with-nav-tabs.panel-primary .nav-tabs > .open > a,
-                    .with-nav-tabs.panel-primary .nav-tabs > .open > a:hover,
-                    .with-nav-tabs.panel-primary .nav-tabs > .open > a:focus,
-                    .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
-                    .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
-                    color: #fff;
-                    background-color: #3071a9;
-                    border-color: transparent;
-                    }
-                    .with-nav-tabs.panel-primary .nav-tabs > li.active > a,
-                    .with-nav-tabs.panel-primary .nav-tabs > li.active > a:hover,
-                    .with-nav-tabs.panel-primary .nav-tabs > li.active > a:focus {
-                    color: #428bca;
-                    background-color: #fff;
-                    border-color: #428bca;
-                    border-bottom-color: transparent;
-                    }
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu {
-                    background-color: #428bca;
-                    border-color: #3071a9;
-                    }
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
-                    color: #fff;
-                    }
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-                    background-color: #3071a9;
-                    }
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-                    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-                    background-color: #4a9fe9;
-                    }
-                    }
-                    </style>
-                    @stop
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-success" type="submit" value="Salvar"/>
+                    <a class="btn btn-danger" type="reset" href="/tarefas">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <style type="text/css" media="screen">
+    .panel.with-nav-tabs .panel-heading{
+    padding: 5px 5px 0 5px;
+    }
+    .panel.with-nav-tabs .nav-tabs{
+    border-bottom: none;
+    }
+    .panel.with-nav-tabs .nav-justified{
+    margin-bottom: -1px;
+    }
+    /********************************************************************/
+    /*** PANEL DEFAULT ***/
+    .with-nav-tabs.panel-default .nav-tabs > li > a,
+    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+    }
+    .with-nav-tabs.panel-default .nav-tabs > .open > a,
+    .with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
+    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+    background-color: #ddd;
+    border-color: transparent;
+    }
+    .with-nav-tabs.panel-default .nav-tabs > li.active > a,
+    .with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
+    color: #555;
+    background-color: #fff;
+    border-color: #ddd;
+    border-bottom-color: transparent;
+    }
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    }
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
+    color: #777;
+    }
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+    background-color: #ddd;
+    }
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+    color: #fff;
+    background-color: #555;
+    }
+    /********************************************************************/
+    /*** PANEL PRIMARY ***/
+    .with-nav-tabs.panel-primary .nav-tabs > li > a,
+    .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
+    .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
+    color: #fff;
+    }
+    .with-nav-tabs.panel-primary .nav-tabs > .open > a,
+    .with-nav-tabs.panel-primary .nav-tabs > .open > a:hover,
+    .with-nav-tabs.panel-primary .nav-tabs > .open > a:focus,
+    .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
+    .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
+    color: #fff;
+    background-color: #3071a9;
+    border-color: transparent;
+    }
+    .with-nav-tabs.panel-primary .nav-tabs > li.active > a,
+    .with-nav-tabs.panel-primary .nav-tabs > li.active > a:hover,
+    .with-nav-tabs.panel-primary .nav-tabs > li.active > a:focus {
+    color: #428bca;
+    background-color: #fff;
+    border-color: #428bca;
+    border-bottom-color: transparent;
+    }
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu {
+    background-color: #428bca;
+    border-color: #3071a9;
+    }
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
+    color: #fff;
+    }
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+    background-color: #3071a9;
+    }
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+    background-color: #4a9fe9;
+    }
+    }
+    </style>
+    @stop
