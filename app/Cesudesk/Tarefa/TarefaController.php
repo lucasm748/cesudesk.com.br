@@ -44,15 +44,13 @@ class TarefaController extends Controller
     public function show($id)
     {
         $tarefa = $this->tarefaService->find($id);
-        $triagens = array();
-        $triagens = (array) $tarefa->triagens();
-        print_r($triagens);exit;
         $tarefa->dh_cadastro = Carbon::now()->format('d/m/Y H:i:s');
         $modulos = Modulo::where('active', 1)->select('descricao','id')->pluck('descricao', 'id');
         $tipoTarefas = TipoTarefa::where('active', 1)->select('descricao','id')->pluck('descricao', 'id');
         $projetos = Projeto::where('active', 1)->select('descricao','id')->pluck('descricao', 'id');
         $usuarios = Usuario::where('active', 1)->select('login', 'id')->pluck('login', 'id');
-        return view('tarefas.show',  compact('tarefa','modulos','tipoTarefas','projetos', 'usuarios', 'triagens'));
+        $usuariosTriagem = Usuario::where('active', 1)->select('login', 'id')->pluck('login', 'id');
+        return view('tarefas.show',  compact('tarefa','modulos','tipoTarefas','projetos', 'usuarios', 'triagens', 'usuariosTriagem'));
     }
 
     public function update(Request $request, $id)
@@ -75,8 +73,9 @@ class TarefaController extends Controller
         $tipoTarefas = TipoTarefa::where('active', 1)->select('descricao','id')->pluck('descricao', 'id');
         $projetos = Projeto::where('active', 1)->select('descricao','id')->pluck('descricao', 'id');
         $usuarios = Usuario::where('active', 1)->select('login', 'id')->pluck('login', 'id');
+        $usuariosTriagem = Usuario::where('active', 1)->select('login', 'id')->pluck('login', 'id');
         $triagens = array();
-        return view('tarefas.show',  compact('tarefa','modulos','tipoTarefas','projetos', 'usuarios', 'triagens'));
+        return view('tarefas.show',  compact('tarefa','modulos','tipoTarefas','projetos', 'usuarios', 'triagens', 'usuariosTriagem'));
     }
 
     public function store(Request $request)
