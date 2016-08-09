@@ -14,19 +14,22 @@
 @endif
 @if ($tarefa->id >0)
 <form name="form" role="form" id="form" action="{{ url('tarefas', $tarefa->id) }}" method="post" accept-charset="utf-8">
+<meta name="csrf_token" content="{{ csrf_token() }}" />
     <div class="container-fluid">
-        <input name="_method" type="hidden" value="PUT">
+        <input name="_method" type="hidden" value="PUT"/>
         @else
         <form name="form" role="form" id="form" action="{{ url('tarefas') }}" method="post" accept-charset="utf-8">
-            <input name="_method" type="hidden" value="POST">
+        <meta name="csrf_token" content="{{ csrf_token() }}" />
+            <input name="_method" type="hidden" value="POST"/>
             @endif
             {!! csrf_field() !!}
             <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading">
                     <ul class="nav nav-tabs">
                         <li class="ative"><a data-toggle="tab" href="#tabs-1">Dados da Solicitação</a></li>
-                        <li><a data-toggle="tab" href="#tabs-2">Informações Adicionais</a></li>
-                        <li><a data-toggle="tab" href="#tabs-3">Triagens</a></li>
+                        <li>
+                            <a data-toggle="tab" href="#tabs-3">Triagens</a>
+                        </li>
                         <li><a data-toggle="tab" href="#tabs-4">Anexos</a></li>
                         <li><a data-toggle="tab" href="#tabs-5">Comentários</a></li>
                     </ul>
@@ -123,263 +126,344 @@
                                 <label>Solicitação (Descrição)</label>
                                 <textarea class="form-control" name="descricao" id="descricao" rows="4" cols="15" placeholder="Descrição do chamado">{!!$tarefa->descricao!!}</textarea>
                             </div>
-                        </div>
-                        <div id="tabs-2" class="tab-pane fade">
                             <div class="form-group">
-                                <label>Informações Adicionais</label>
-                                <textarea class="form-control" name="ds_info_complementar" id="ds_info_complementar" rows="6" cols="15" placeholder="Informações adicionais diversas">{!!$tarefa->ds_info_complementar!!}</textarea>
+                                <input class="btn btn-success" type="submit" value="Salvar"/>
+                                <a class="btn btn-danger" type="reset" href="/tarefas">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="tabs-3" class="tab-pane fade">
+                        <!-- Trigger the modal with a button -->
+                        <button id="bttriagens" type="button" class="btn btn-info btn-md">Nova Triagem</button>
+<!--                         @if (!(count($tarefa->triagens)>0))
+                        <div class="row" style="margin-top: 50px;">
+                            <div class="col-md-4 col-md-offset-4">
+                                <label class="alert alert-info">Nenhum registro encontrado.</label>
                             </div>
                         </div>
-                        <div id="tabs-3" class="tab-pane fade">
-                            <!-- Trigger the modal with a button -->
-                            <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#triagens">Nova Triagem</button>
-                            @if (!(count($tarefa->triagens)>0))
-                            <div class="row" style="margin-top: 50px;">
-                                <div class="col-md-4 col-md-offset-4">
-                                    <label class="alert alert-info">Nenhum registro encontrado.</label>
-                                </div>
-                            </div>
-                            @else
-                            <table id="tbtriagens" class="table table-striped table-hover table-responsive table-condensed">
-                                <thead>
-                                    <tr>
-                                        <td>Usuário</td>
-                                        <td>Descrição</td>
-                                        <td>Início</td>
-                                        <td>Fechamento</td>
-                                        <td>Horas gastas</td>
-                                        <td>Status</td>
-                                        <td>Ações</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($tarefa->triagens as $triagem)
-                                    <tr>
-                                        <td>{{ $triagem->usuario->login}}</td>
-                                        <td>{{ $triagem->descricao}}</td>
-                                        <td>{{ $triagem->dh_inicio_triagem}}</td>
-                                        <td>{{ $triagem->dh_fim_triagem}}</td>
-                                        <td>{{ $triagem->qt_horas}}</td>
-                                        <td>{{ $triagem->tp_status}}</td>
-                                        <td>
-                        <a href="#" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a>
-                            <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @endif
-                            <!-- Modal -->
-                            <div id="triagens" role="dialog" class="modal fade">
-                                <div class="modal-dialog">
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            <h4 class="modal-title">Triagens</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div id="triagem-area">
-                                                <div class="form-group">
-                                                    <label class="control-label">Descrição</label>
-                                                    <input id="desctri" type="text" class="form-control" placeholder="Breve descrição sobre a finalidade da triagem">
+                        @else -->
+                        <table id="tbtriagens" class="table table-striped table-hover table-responsive table-condensed">
+                            <thead>
+                                <tr>
+                                    <td>Usuário</td>
+                                    <td>Descrição</td>
+                                    <td>Início</td>
+                                    <td>Fechamento</td>
+                                    <td>Horas gastas</td>
+                                    <td>Status</td>
+                                    <td>Ações</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($tarefa->triagens as $triagem)
+                                <tr>
+                                    <td>{{ $triagem->usuario->login}}</td>
+                                    <td>{{ $triagem->descricao}}</td>
+                                    <td>{{ $triagem->dh_inicio_triagem}}</td>
+                                    <td>{{ $triagem->dh_fim_triagem}}</td>
+                                    <td>
+                                        @if(!($triagem->qt_horas)>0)
+                                        <?php echo 'Sem execuções'; ?>
+                                        @else
+                                        {{ $triagem->qt_horas }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                    <?php 
+                                        switch ($triagem->tp_status) {
+                                            case 'A':
+                                                echo 'Aberta';
+                                                break;
+                                            case 'N':
+                                                echo 'Andamento';
+                                                break;
+                                            case 'F':
+                                                echo 'Fechada';
+                                                break;
+                                            default:
+                                                echo $triagem->tp_status;
+                                                break;
+                                        }
+                                    ?>
+                                    </td>
+                                    <td>
+                                        <form action="{{ url('/triagem/del/'.$triagem->id) }}" method="POST">
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                            <a href="/triagens/{{$triagem->id}}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a>
+                                            <button type="button" id="btndeltri{{ $triagem->id }}" data-id="{{ $triagem->id }}" class="btn-xs btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @endif
+                        <!-- Modal -->
+                        <div id="triagens" role="dialog" class="modal fade" style="margin-top: 10%;">
+                           <div class="modal-dialog">
+                            <form name="form" role="form" id="formtri" action="{{ url('triagens') }}" method="post" accept-charset="utf-8">
+                            <meta name="csrf_token" content="{{ csrf_token() }}" />
+                                {!! csrf_field() !!}
+                                <!-- Modal content-->
+                                <input type="hidden" name="id_tarefa" value="{{ $triagem->id_tarefa }}">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Triagens</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="triagem-area">
+                                            <div class="form-group">
+                                                <label class="control-label">Descrição</label>
+                                                <input id="desctri" name="descricao" type="text" class="form-control" placeholder="Breve descrição sobre a finalidade da triagem">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Usuário</label>
+                                                <?php echo Form::select('id_usuario', $usuariosTriagem, null, [
+                                                'placeholder' => 'Selecione o usuário',
+                                                'class' => 'form-control',
+                                                'required' => 'true',
+                                                'id' => 'usutri'
+                                                ]);
+                                                ?>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Início Triagem</label>
+                                                    <input type="text" class="form-control" id="dh_inicio_triagem" name="dh_inicio_triagem" value="{{ $tarefa->dh_inicio_triagem }}" placeholder="Data de início da triagem">
+                                                    <script>
+                                                    $(function() {
+                                                    $('#dh_inicio_triagem').datetimepicker({
+                                                    dateFormat: 'dd/mm/yy',
+                                                    showOtherMonths: true,
+                                                    selectOtherMonths: true,
+                                                    showButtonPanel:true,
+                                                    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                                                    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                                                    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                                                    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+                                                    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+                                                    });
+                                                    });
+                                                    </script>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="control-label">Usuário</label>
-                                                <div class="col-md-4">
-                                                    <label class="control-label">Usuário</label>
-                                                    <?php  $usuTri = (int) $triagem->id_usuario;
-                                                    echo Form::select('id_usuario', $usuariosTriagem, $usuTri, [
-                                                    'placeholder' => 'Selecione o usuário',
-                                                    'class' => 'form-control',
-                                                    'required' => 'true',
-                                                    'id' => 'usutri'
-                                                    ]);
-                                                    ?>
-                                                </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label class="control-label">Início Triagem</label>
-                                                        <input type="text" class="form-control" id="dh_inicio_triagem" name="dh_inicio_triagem" value="{{ $tarefa->dh_inicio_triagem }}" placeholder="Data de início da triagem">
-                                                        <script>
-                                                        $(function() {
-                                                        $('#dh_inicio_triagem').datetimepicker({
-                                                        dateFormat: 'dd/mm/yy',
-                                                        showOtherMonths: true,
-                                                        selectOtherMonths: true,
-                                                        showButtonPanel:true,
-                                                        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-                                                        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-                                                        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-                                                        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-                                                        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-                                                        });
-                                                        });
-                                                        </script>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="control-label">Fechamento Triagem</label>
-                                                        <input type="text" class="form-control" id="dh_fim_triagem" name="dh_fim_triagem" value="{{ $tarefa->dh_fim_triagem }}" placeholder="Data de fechamento da triagem">
-                                                        <script>
-                                                        $(function() {
-                                                        $('#dh_fim_triagem').datetimepicker({
-                                                        dateFormat: 'dd/mm/yy',
-                                                        showOtherMonths: true,
-                                                        selectOtherMonths: true,
-                                                        showButtonPanel:true,
-                                                        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-                                                        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-                                                        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-                                                        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-                                                        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-                                                        });
-                                                        });
-                                                        </script>
-                                                    </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Fechamento Triagem</label>
+                                                    <input type="text" class="form-control" id="dh_fim_triagem" name="dh_fim_triagem" value="{{ $tarefa->dh_fim_triagem }}" placeholder="Data de fechamento da triagem">
+                                                    <script>
+                                                    $(function() {
+                                                    $('#dh_fim_triagem').datetimepicker({
+                                                    dateFormat: 'dd/mm/yy',
+                                                    showOtherMonths: true,
+                                                    selectOtherMonths: true,
+                                                    showButtonPanel:true,
+                                                    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+                                                    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                                                    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                                                    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+                                                    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+                                                    });
+                                                    });
+                                                    </script>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-md btn-primary" onclick="addTriagem()">Salvar</button>
-<script type="text/javascript">
-    (function($) {
-  addTriagem = function() {
-
-    var newRow = $("<tr>");
-    var cols = "";
-    var triagem = [];
-    triagem["descricao"] = $('#desctri').val();
-    triagem["usuario"] = $('#usutri').val();
-    triagem["inicio"] = $('#dh_inicio_triagem').val();
-    triagem["fim"] = $('#dh_fim_triagem').val();
-    triagem["horasgastas"] = 0;
-    triagem["statustriagem"] = 'A';
-
-    cols += '<td>'+triagem["usuario"]+'</td>';
-    cols += '<td>'+triagem["descricao"]+'</td>';
-    cols += '<td>'+triagem["inicio"]+'</td>';
-    cols += '<td>'+triagem["fim"]+'</td>';
-    cols += '<td>'+triagem["horasgastas"]+'</td>';
-    cols += '<td>'+triagem["statustriagem"]+'</td>';
-    cols += '<td>';
-    cols += '<a href="#" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a><button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>';
-    cols += '</td>';
-
-    newRow.append(cols);
-    $("#tbtriagens").append(newRow);
-
-    return false;
-  };
-})(jQuery);
-</script>
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="btnsvtriagem" class="btn btn-md btn-primary" >Salvar</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
+                                        <script>
+                                        $(document).ready(function() {
+                                        $('#tabs-3').on('click', "#bttriagens", function(e) {
+                                            e.preventDefault();
+                                            var formData = $('#form').serialize();
+                                            var formAction = $('#form').attr('action');
+                                            var formMethod = $('#form').attr('method');
+                                            $.ajaxSetup({
+                                            headers: {
+                                            'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
+                                            }
+                                            });
+                                            $.ajax({
+                                            type  : formMethod,
+                                            url   : formAction,
+                                            data  : formData,
+                                            cache : false,
+                                            success : function(data) {
+                                            $('#triagens').modal('show');
+                                            },
+                                            error : function() {
+                                            console.log('Erro executando atualização.')
+                                            }
+                                            });
+                                            return false; // prevent send form
+                                            });
+                                        $('#triagens').on('click', '#btnsvtriagem', function(e) {
+                                        e.preventDefault();
+                                        var formData = $('#formtri').serialize();
+                                        var formAction = $('#formtri').attr('action');
+                                        var formMethod = $('#formtri').attr('method');
+                                        $.ajaxSetup({
+                                        headers: {
+                                        'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
+                                        }
+                                        });
+                                        $.ajax({
+                                        type  : formMethod,
+                                        url   : formAction,
+                                        data  : formData,
+                                        cache : false,
+
+                                        success : function(data) {
+                                        $('#triagens').modal('hide');
+                                        $('#tbtriagens').load(location.href + ' #tbtriagens', 
+                                            function (responseText, status) {
+                                        $('#formtri')[0].reset();
+                                        if (!status == 'success') {
+                                        console.log('Falha recarregando a tabela');
+                                        }
+                                        });
+                                        },
+                                        error : function() {
+                                        console.log('Erro executando atualização.')
+                                        }
+                                        });
+                                        
+                                        return false; // prevent send form
+                                        });
+                                        $('#tbtriagens').on("click", ".btn-xs.btn.btn-danger",function(e) {
+                                        var idTriagem = ($(this).attr("data-id"));
+                                        var formAction = '/triagens/'+idTriagem;
+                                        var formMethod = 'DELETE';
+                                        $.ajaxSetup({
+                                        headers: {
+                                        'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
+                                        }
+                                        });
+                                        $.ajax({
+                                        type  : formMethod,
+                                        url   : formAction,
+                                        data  : {id : idTriagem},
+                                        cache : false,
+
+                                        success : function(data) {
+                                        $('#tbtriagens').load(location.href + ' #tbtriagens', function (responseText, status) {
+                                        if (!status == 'success') {
+                                        console.log('Falha recarregando a tabela');
+                                        }
+                                        });
+                                        },
+                                          error: function(xhr, textStatus, errorThrown) { 
+                                                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+                                                },
+                                        });
+                                        return false;
+                                        });
+                                        });
+                                        </script>
+                            </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <input class="btn btn-success" type="submit" value="Salvar"/>
-                    <a class="btn btn-danger" type="reset" href="/tarefas">Cancelar</a>
-                </div>
             </div>
-        </form>
+        </div>
     </div>
-    <style type="text/css" media="screen">
-    .panel.with-nav-tabs .panel-heading{
-    padding: 5px 5px 0 5px;
-    }
-    .panel.with-nav-tabs .nav-tabs{
-    border-bottom: none;
-    }
-    .panel.with-nav-tabs .nav-justified{
-    margin-bottom: -1px;
-    }
-    /********************************************************************/
-    /*** PANEL DEFAULT ***/
-    .with-nav-tabs.panel-default .nav-tabs > li > a,
-    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-    color: #777;
-    }
-    .with-nav-tabs.panel-default .nav-tabs > .open > a,
-    .with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
-    .with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
-    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-    color: #777;
-    background-color: #ddd;
-    border-color: transparent;
-    }
-    .with-nav-tabs.panel-default .nav-tabs > li.active > a,
-    .with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
-    .with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
-    color: #555;
-    background-color: #fff;
-    border-color: #ddd;
-    border-bottom-color: transparent;
-    }
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
-    background-color: #f5f5f5;
-    border-color: #ddd;
-    }
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #777;
-    }
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-    background-color: #ddd;
-    }
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-    color: #fff;
-    background-color: #555;
-    }
-    /********************************************************************/
-    /*** PANEL PRIMARY ***/
-    .with-nav-tabs.panel-primary .nav-tabs > li > a,
-    .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
-    .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
-    color: #fff;
-    }
-    .with-nav-tabs.panel-primary .nav-tabs > .open > a,
-    .with-nav-tabs.panel-primary .nav-tabs > .open > a:hover,
-    .with-nav-tabs.panel-primary .nav-tabs > .open > a:focus,
-    .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
-    .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
-    color: #fff;
-    background-color: #3071a9;
-    border-color: transparent;
-    }
-    .with-nav-tabs.panel-primary .nav-tabs > li.active > a,
-    .with-nav-tabs.panel-primary .nav-tabs > li.active > a:hover,
-    .with-nav-tabs.panel-primary .nav-tabs > li.active > a:focus {
-    color: #428bca;
-    background-color: #fff;
-    border-color: #428bca;
-    border-bottom-color: transparent;
-    }
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu {
-    background-color: #428bca;
-    border-color: #3071a9;
-    }
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #fff;
-    }
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-    background-color: #3071a9;
-    }
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-    .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-    background-color: #4a9fe9;
-    }
-    }
-    </style>
-    @stop
+</div>
+<style type="text/css" media="screen">
+.panel.with-nav-tabs .panel-heading{
+padding: 5px 5px 0 5px;
+}
+.panel.with-nav-tabs .nav-tabs{
+border-bottom: none;
+}
+.panel.with-nav-tabs .nav-justified{
+margin-bottom: -1px;
+}
+/********************************************************************/
+/*** PANEL DEFAULT ***/
+.with-nav-tabs.panel-default .nav-tabs > li > a,
+.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+color: #777;
+}
+.with-nav-tabs.panel-default .nav-tabs > .open > a,
+.with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
+.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+color: #777;
+background-color: #ddd;
+border-color: transparent;
+}
+.with-nav-tabs.panel-default .nav-tabs > li.active > a,
+.with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
+color: #555;
+background-color: #fff;
+border-color: #ddd;
+border-bottom-color: transparent;
+}
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
+background-color: #f5f5f5;
+border-color: #ddd;
+}
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
+color: #777;
+}
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+background-color: #ddd;
+}
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+color: #fff;
+background-color: #555;
+}
+/********************************************************************/
+/*** PANEL PRIMARY ***/
+.with-nav-tabs.panel-primary .nav-tabs > li > a,
+.with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
+color: #fff;
+}
+.with-nav-tabs.panel-primary .nav-tabs > .open > a,
+.with-nav-tabs.panel-primary .nav-tabs > .open > a:hover,
+.with-nav-tabs.panel-primary .nav-tabs > .open > a:focus,
+.with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
+color: #fff;
+background-color: #3071a9;
+border-color: transparent;
+}
+.with-nav-tabs.panel-primary .nav-tabs > li.active > a,
+.with-nav-tabs.panel-primary .nav-tabs > li.active > a:hover,
+.with-nav-tabs.panel-primary .nav-tabs > li.active > a:focus {
+color: #428bca;
+background-color: #fff;
+border-color: #428bca;
+border-bottom-color: transparent;
+}
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu {
+background-color: #428bca;
+border-color: #3071a9;
+}
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
+color: #fff;
+}
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+background-color: #3071a9;
+}
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+background-color: #4a9fe9;
+}
+}
+</style>
+@stop

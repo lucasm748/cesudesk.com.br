@@ -10,7 +10,7 @@ class Triagem extends Model
     /* Tabela a qual o módulo está associado*/
     protected $table = 'triagem';
     /* Campos que podem ser preechidos pelo usuário */
-    protected $fillable = ['descricao','dh_ds_info_complementar', 'dh_inicio_triagem', 'dh_fim_triagem', 'qt_horas', 'tp_status', 'id_usuario'];
+    protected $fillable = ['id_tarefa', 'descricao','dh_ds_info_complementar', 'dh_inicio_triagem', 'dh_fim_triagem', 'qt_horas', 'tp_status', 'id_usuario'];
 
     public function usuario()
     {

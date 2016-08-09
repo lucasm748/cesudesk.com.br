@@ -15,7 +15,7 @@ class CreateTableTriagem extends Migration
         Schema::create('triagem', function (Blueprint $table) {
             $table->increments('id');
             $table->string('descricao', 200);
-            $table->string('ds_info_complementar', 4000);
+            $table->string('ds_info_complementar', 4000)->nullable();
             $table->timestamp('dh_inicio_triagem')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('dh_fim_triagem')->nullable();
             $table->integer('qt_horas')->default(0);

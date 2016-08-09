@@ -29,12 +29,6 @@ class TriagemController extends Controller
         $this->triagemService = $triagemService;
     }
 
-    public function index()
-    {
-        $triagens = $this->triagemService->getAll();
-        return view('triagens.index', compact('triagens'));
-    }
-
     public function show($id)
     {
         $triagem = $this->triagemService->find($id);
@@ -45,26 +39,19 @@ class TriagemController extends Controller
     public function update(Request $request, $id)
     {
         $triagem = $this->triagemService->update($request->all(), $id);
-        return redirect('triagens');
+        return redirect('tarefas');
     }
 
     public function destroy($id)
     {
         $triagem = $this->triagemService->delete($id);
-        return redirect('triagens');
-    }
-
-    public function create()
-    {
-        $triagem = new Triagem();
-        $usuariosTriagem = Usuario::where('active', 1)->select('login', 'id')->pluck('login', 'id');
-        return view('triagens.show',  compact('triagem','usuarios'));
+        return 'deletado';
     }
 
     public function store(Request $request)
     {
         $triagem = $this->triagemService->store($request->all());
-        return redirect('triagens');
+        return redirect('tarefas');
     }
 
 }
