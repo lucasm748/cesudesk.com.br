@@ -302,6 +302,18 @@
                                         $('#triagens').on('click', '#btnsvtriagem', function(e) {
                                         e.preventDefault();
                                         var formData = $('#formtri').serialize();
+                                        var dh_inicio_triagem = $('#dh_inicio_triagem').val();
+                                        var dh_fim_triagem = $('#dh_fim_triagem').val();
+                                        var id_usuario = $('#usutri').attr('selectedIndex');
+                                        alert(id_usuario);
+                                        if (!id_usuario > 0) {
+                                            alert('Selecione o usuário destino da triagem');
+                                        }
+
+                                        if (dh_fim_triagem < dh_inicio_triagem ){
+                                            alert('O horário de término deve ser maior que o de início');
+
+                                        } else {
                                         var formAction = $('#formtri').attr('action');
                                         var formMethod = $('#formtri').attr('method');
                                         $.ajaxSetup({
@@ -329,7 +341,7 @@
                                         console.log('Erro executando atualização.')
                                         }
                                         });
-                                        
+                                        }                                        
                                         return false; // prevent send form
                                         });
                                         $('#tbtriagens').on("click", ".btn-xs.btn.btn-danger",function(e) {
