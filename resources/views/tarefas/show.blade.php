@@ -1,10 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@if($tarefa->descricao)
-<h2 class="text-info">Tarefa: {{ $tarefa->titulo }}</h2>
-@else
-<h1 class="text-info"> Tarefa: Nova Tarefa </h1>
-@endif
 @if ($errors->any())
 <ul>
     @foreach($errors->all() as $error)
@@ -13,15 +8,17 @@
 </ul>
 @endif
 @if ($tarefa->id >0)
-<form name="form" role="form" id="form" action="{{ url('tarefas', $tarefa->id) }}" method="post" accept-charset="utf-8">
-<meta name="csrf_token" content="{{ csrf_token() }}" />
-<script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap-disabled-tabclick.js') }}"></script>
-    <div class="container-fluid">
-        <input name="_method" type="hidden" value="PUT"/>
-        @else
+        <form name="form" role="form" id="form" action="{{ url('tarefas', $tarefa->id) }}" method="post" accept-charset="utf-8">
+        <meta name="csrf_token" content="{{ csrf_token() }}" />
+        <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap-disabled-tabclick.js') }}"></script>
+            <div class="container-fluid">
+                <input name="_method" type="hidden" value="PUT"/>
+            <h3 class="text-info"><strong>Ticket ID:</strong>{{ $tarefa->id }} - {{ $tarefa->titulo }}</h3>
+@else
         <form name="form" role="form" id="form" action="{{ url('tarefas') }}" method="post" accept-charset="utf-8">
         <meta name="csrf_token" content="{{ csrf_token() }}" />
             <input name="_method" type="hidden" value="POST"/>
+        <h3 class="text-info"><strong>Ticket ID:</strong> Nova Tarefa </h3>
             @endif
             {!! csrf_field() !!}
             <div class="panel with-nav-tabs panel-primary">
@@ -144,23 +141,16 @@
                     <div id="tabs-3" class="tab-pane fade">
                         <!-- Trigger the modal with a button -->
                         <button id="bttriagens" type="button" class="btn btn-info btn-md">Nova Triagem</button>
-<!--                         @if (!(count($tarefa->triagens)>0))
-                        <div class="row" style="margin-top: 50px;">
-                            <div class="col-md-4 col-md-offset-4">
-                                <label class="alert alert-info">Nenhum registro encontrado.</label>
-                            </div>
-                        </div>
-                        @else -->
                         <table id="tbtriagens" class="table table-striped table-hover table-responsive table-condensed">
                             <thead>
                                 <tr>
-                                    <td>Usuário</td>
-                                    <td>Descrição</td>
-                                    <td>Início</td>
-                                    <td>Fechamento</td>
-                                    <td>Horas gastas</td>
-                                    <td>Status</td>
-                                    <td>Ações</td>
+                                    <td><b>Usuário</b></td>
+                                    <td><b>Descrição</b></td>
+                                    <td><b>Início</b></td>
+                                    <td><b>Fechamento</b></td>
+                                    <td><b>Horas gastas</b></td>
+                                    <td><b>Status</b></td>
+                                    <td><b>Ações</b></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -207,7 +197,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        @endif
                         <!-- Modal -->
                         <div id="triagens" role="dialog" class="modal fade" style="margin-top: 10%;">
                            <div class="modal-dialog">
@@ -344,6 +333,8 @@
                                         return false; // prevent send form
                                         });
                                         $('#tbtriagens').on("click", ".btn-xs.btn.btn-danger",function(e) {
+                                        var confirma = confirm("Deseja realemente apagar este registro?");
+                                        if (confirma) {
                                         var idTriagem = ($(this).attr("data-id"));
                                         var formAction = '/triagens/'+idTriagem;
                                         var formMethod = 'DELETE';
@@ -369,6 +360,7 @@
                                                     alert("Status: " + textStatus); alert("Error: " + errorThrown); 
                                                 },
                                         });
+                                    }
                                         return false;
                                         });
                                         });
