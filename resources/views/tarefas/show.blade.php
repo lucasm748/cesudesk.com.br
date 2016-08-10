@@ -15,6 +15,7 @@
 @if ($tarefa->id >0)
 <form name="form" role="form" id="form" action="{{ url('tarefas', $tarefa->id) }}" method="post" accept-charset="utf-8">
 <meta name="csrf_token" content="{{ csrf_token() }}" />
+<script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap-disabled-tabclick.js') }}"></script>
     <div class="container-fluid">
         <input name="_method" type="hidden" value="PUT"/>
         @else
@@ -25,13 +26,21 @@
             {!! csrf_field() !!}
             <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading">
-                    <ul class="nav nav-tabs">
-                        <li class="ative"><a data-toggle="tab" href="#tabs-1">Dados da Solicitação</a></li>
-                        <li>
-                            <a data-toggle="tab" href="#tabs-3">Triagens</a>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li id="body_dados" class="ative">
+                            <a id="link_body_dados" data-toggle="tab" href="#tabs-1">Dados da Solicitação</a>
                         </li>
-                        <li><a data-toggle="tab" href="#tabs-4">Anexos</a></li>
-                        <li><a data-toggle="tab" href="#tabs-5">Comentários</a></li>
+                        @if($tarefa->id)
+                        <li id="body_triagens">
+                            <a id="link_body_dados" data-toggle="tab" href="#tabs-3">Triagens</a>
+                        </li>
+                        <li id="body_anexos">
+                            <a id="link_body_anexos" data-toggle="tab" href="#tabs-4">Anexos</a>
+                        </li>
+                        <li id="body_comentarios">
+                            <a id="link_body_comentarios" data-toggle="tab" href="#tabs-5">Comentários</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="panel-body">
