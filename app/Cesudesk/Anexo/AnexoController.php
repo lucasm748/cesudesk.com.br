@@ -6,6 +6,7 @@ use App\Cesudesk\Cargo\Cargo;
 use App\Cesudesk\Equipe\Equipe;
 use App\Cesudesk\Cargo\CargoService as CargoService;
 use Illuminate\Http\Request;
+use Validator;
 
 use App\Cesudesk\Anexo\AnexoServiceContract;
 
@@ -29,40 +30,31 @@ class AnexoController extends Controller
         $this->anexoService = $anexoService;
     }
 
-    public function index()
-    {
-        $anexos = $this->anexoService->getAll();
-        return view('anexos.index', compact('anexos'));
-    }
-
-    public function show($id)
-    {
-        $anexo = $this->anexoService->find($id);
-        return view('anexos.show', compact('anexo'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $anexo = $this->anexoService->update($request->all(), $id);
-        return redirect('anexos');
-    }
-
     public function destroy($id)
     {
         $anexo = $this->anexoService->delete($id);
         return redirect('anexos');
     }
 
-    public function create()
-    {
-        $anexo = new Anexo();
-        return view('anexos.show',  compact('anexo'));
-    }
-
     public function store(Request $request)
     {
-        $anexo = $this->anexoService->store($request->all());
-        return redirect('anexos');
+        // $this->validade($request, 
+        //     [
+        //         'name' => 'required',
+        //         'arquivo' => 'mimes:png,jpeg',
+        //     ]);
+        // $anexo = new Anexo($request->all());
+        // $arquivo = $request->file('arquivo');
+
+        // $ext = $arquivo->getClientOriginalExtension();
+        // $path = public_path('uploads/anexos' .$arquivo->getClientOriginalName());
+        // Request::file('arquivo')->move($path, $arquivo->getClientOriginalName());
+        // // $anexo->arquivo = $path;
+        // $anexo->save();
+
+        // Session::flash('flash_message', 'Anexo enviado');
+        // return redirect('tarefas');
+
     }
 
 }

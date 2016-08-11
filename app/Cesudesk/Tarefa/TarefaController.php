@@ -97,11 +97,35 @@ class TarefaController extends Controller
         return redirect('tarefas');
     }
 
-    public function addTriagem( Request $request)
+    public function addTriagem(Request $request)
     {
         $triagem = new Triagem();
         $triagem = $request;
         $triagem = $tarefa->triagens->save($triagem);
+    }
+
+    public function addAnexo(Request $request)
+    {
+        $anexo = new Anexo();
+        $arquivo = $request->file('arquivo');
+        $destino = 'oploads/anexos';
+        if ($request->hasFile('arquivo')) {
+            echo 'ta updado';
+            if ($request->file('arquivo')->isValid()){
+                $request->file('arquivo')->move($destino, $request->name);
+                $name = $request->file('arquivo')->getClientOriginalName();
+                $ext =  $request->file('arquivo')->getClientOriginalExtension();
+                $size = 0; //$request->file('arquivo')->getSize();
+
+                $arquivo->arquivo  = $arquivo;
+                $anexo->size = $size;
+                $anexo = $tarefa->anexos->save($arquivo);
+            }
+
+        } else {
+            echo 'não ta upado';
+            exit;
+        }
     }
 
 }

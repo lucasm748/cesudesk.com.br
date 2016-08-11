@@ -27,14 +27,20 @@ $(document).ready(function() {
         e.preventDefault();
         var formData = $('#formtri').serialize();
         var dh_inicio_triagem = $('#dh_inicio_triagem').val();
-        var dh_fim_triagem = $('#dh_fim_triagem').val();
+        // var dh_fim_triagem = $('#dh_fim_triagem').val();
         var id_usuario = $('#usutri').val();
         if (!id_usuario > 0) {
-            alert('Selecione o usuário destino da triagem');
+            setTimeout("$('#mensagem').fadeOut()", 4000);
+            $('#mensagem').html('<p class="text-center bg-danger">O usuário deve ser selecionado.</p>');
         }
-        if (dh_fim_triagem < dh_inicio_triagem) {
-            alert('O horário de término deve ser maior que o de início');
-        } else {
+        if (!dh_inicio_triagem) {
+            setTimeout("$('#mensagem').fadeOut()", 4000);
+            $('#mensagem').html('<p class="text-center bg-danger">Informe uma data de início válida.</p>');
+
+        }
+        // if (dh_fim_triagem < dh_inicio_triagem) {
+        //     $('#mensagem').html('<p class="text-center bg-danger">O horário final de execução deve ser maio que o início.</p>');
+        // } else {
 
             var formAction = $('#formtri').attr('action');
             var formMethod = $('#formtri').attr('method');
@@ -62,7 +68,7 @@ $(document).ready(function() {
                     console.log('Erro executando atualização.')
                 }
             });
-        }
+        // } // Else da validação de hora
         return false; // prevent send form
     });
     $('#tbtriagens').on("click", ".btn-xs.btn.btn-danger", function(e) {

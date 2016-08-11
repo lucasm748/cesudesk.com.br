@@ -131,6 +131,7 @@
                             </div>
                         </form>
                     </div>
+
                     <div id="tabs-3" class="tab-pane fade">
                         <!-- Trigger the modal with a button -->
                         <button id="bttriagens" type="button" class="btn btn-info btn-md">Nova Triagem</button>
@@ -197,7 +198,7 @@
                             <meta name="csrf_token" content="{{ csrf_token() }}" />
                                 {!! csrf_field() !!}
                                 <!-- Modal content-->
-                                <input type="hidden" name="id_tarefa" value="{{ $triagem->id_tarefa }}">
+                                <input type="hidden" name="id_tarefa" value="{{ $triagem->id_tarefa }}" />
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -222,16 +223,12 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label class="control-label">Início Triagem</label>
-                                                    <input type="text" class="form-control" id="dh_inicio_triagem" name="dh_inicio_triagem" value="{{ $tarefa->dh_inicio_triagem }}" placeholder="Data de início da triagem">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label">Fechamento Triagem</label>
-                                                    <input type="text" class="form-control" id="dh_fim_triagem" name="dh_fim_triagem" value="{{ $tarefa->dh_fim_triagem }}" placeholder="Data de fechamento da triagem">
-
+                                                    <input type="text" class="form-control" id="dh_inicio_triagem" name="dh_inicio_triagem" value="{{ $tarefa->dh_inicio_triagem }}" placeholder="Data de início da triagem" readonly="readonly">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div id="mensagem"></div>
                                     <div class="modal-footer">
                                         <button type="button" id="btnsvtriagem" class="btn btn-md btn-primary" >Salvar</button>
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
@@ -259,6 +256,22 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div id="tabs-4" class="tab-pane fade">
+                    <form name="form" role="form" id="formanexo" action="{{ url('anexos') }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+                        <meta name="csrf_token" content="{{ csrf_token() }}" />
+                        {!! csrf_field() !!}
+                        <input type="hidden" name="id_tarefa" value="{{ $triagem->id_tarefa }}" />
+                        <div class="form-group">
+                            <label for="">Nome</label>
+                            <input type="text" class="form-control input-sm" name="name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="arquivo">Arquivo</label>
+                            <input id="arquivo" type="file" class="form-control input-sm" name="arquivo" />
+                        </div>
+                        <button class="btn btn-primary">Salvar</button>
+                    </form>
                 </div>
             </div>
         </div>

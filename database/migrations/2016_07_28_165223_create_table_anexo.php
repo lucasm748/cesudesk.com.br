@@ -14,6 +14,8 @@ class CreateTableAnexo extends Migration
     {
         Schema::create('anexo', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('size');
+            $table->string('name');
             $table->binary('arquivo');
             $table->integer('id_tarefa')->unsigned();
             $table->foreign('id_tarefa')->
