@@ -1,10 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <form role="form">
-    <div>
-        <h2 class="text-center text-info">Cadastro de Equipes</h2>
-    </div>
     <div class="contents container-fluid">
+    <h3 class="text-left text-info">Cadastro de Equipes</h3>
         <table id="tabela" class="table  table-striped table-hover table-condensed table-responsive" width="100%">
             <thead>
                 <tr>

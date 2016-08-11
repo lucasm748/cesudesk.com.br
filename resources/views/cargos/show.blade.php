@@ -1,10 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@if($cargo->descricao)
-<h1 class="text-info">Cargo: {{ $cargo->descricao }}</h1>
-@else
-<h1 class="text-info"> Cargo: Novo Cargo </h1>
-@endif
 @if ($errors->any())
 <ul>
     @foreach($errors->all() as $error)
@@ -13,12 +8,14 @@
 </ul>
 @endif
 @if ($cargo->id >0)
-<form action="{{ url('cargos', $cargo->id) }}" method="post" accept-charset="utf-8">
-    <div class="container-fluid">
-        <input name="_method" type="hidden" value="PUT">
-        @else
+        <form action="{{ url('cargos', $cargo->id) }}" method="post" accept-charset="utf-8">
+            <div class="container-fluid">
+            <h3 class="text-info"><strong>Cargo ID:</strong> {{ $cargo->id }} - {{ $cargo->descricao }}</h3>
+                <input name="_method" type="hidden" value="PUT">
+@else
         <form action="{{ url('cargos') }}" method="post" accept-charset="utf-8">
             <div class="container-fluid">
+            <h3 class="text-info"><strong>Cargo:</strong> Novo Cargo </h3>
                 <input name="_method" type="hidden" value="POST">
                 @endif
                 {!! csrf_field() !!}

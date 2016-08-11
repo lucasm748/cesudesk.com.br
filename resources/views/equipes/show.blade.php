@@ -1,10 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@if($equipe->descricao)
-<h1 class="text-info">Equipe: {{ $equipe->descricao }}</h1>
-@else
-<h1 class="text-info"> Equipe: Novo Equipe </h1>
-@endif
 @if ($errors->any())
 <ul>
     @foreach($errors->all() as $error)
@@ -15,10 +10,12 @@
 @if ($equipe->id >0)
 <form action="{{ url('equipes', $equipe->id) }}" method="post" accept-charset="utf-8">
     <div class="container-fluid">
+        <h3 class="text-info"><strong>Equipe ID:</strong> {{ $equipe->id}} - {{ $equipe->descricao }}</h3>
         <input name="_method" type="hidden" value="PUT">
-        @else
+@else
         <form action="{{ url('equipes') }}" method="post" accept-charset="utf-8">
             <div class="container-fluid">
+            <h3 class="text-info"><strong>Equipe:</strong> Novo Equipe </h3>
                 <input name="_method" type="hidden" value="POST">
                 @endif
                 {!! csrf_field() !!}
