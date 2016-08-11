@@ -1,4 +1,11 @@
 @extends('layouts.app')
+@section('css')
+<link rel="stylesheet" type="text/css" href="{{ asset('custom/css/tarefas.css') }}" ></link>
+@stop
+@section('scripts')
+    <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap-disabled-tabclick.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('custom/js/tarefas.js') }}"></script>
+@stop
 @section('content')
 @if ($errors->any())
 <ul>
@@ -10,7 +17,8 @@
 @if ($tarefa->id >0)
         <form name="form" role="form" id="form" action="{{ url('tarefas', $tarefa->id) }}" method="post" accept-charset="utf-8">
         <meta name="csrf_token" content="{{ csrf_token() }}" />
-        <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap-disabled-tabclick.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('custom/css/tarefas.css') }}">
+        </script>
             <div class="container-fluid">
                 <input name="_method" type="hidden" value="PUT"/>
             <h3 class="text-info"><strong>Ticket ID:</strong>{{ $tarefa->id }} - {{ $tarefa->titulo }}</h3>
@@ -55,21 +63,6 @@
                                 <div class="col-md-6">
                                     <label>Data Entrega Acordada</label>
                                     <input type="text" class="form-control" id="dh_entrega_prev" name="dh_entrega_prev" value="{{ $tarefa->dh_entrega_prev }}" placeholder="Data de entrega prevista">
-                                    <script>
-                                    $(function() {
-                                    $('#dh_entrega_prev').datepicker({
-                                    dateFormat: 'dd/mm/yy',
-                                    showOtherMonths: true,
-                                    selectOtherMonths: true,
-                                    showButtonPanel:true,
-                                    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-                                    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-                                    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-                                    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-                                    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-                                    });
-                                    });
-                                    </script>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">
@@ -230,40 +223,11 @@
                                                 <div class="col-md-6">
                                                     <label class="control-label">Início Triagem</label>
                                                     <input type="text" class="form-control" id="dh_inicio_triagem" name="dh_inicio_triagem" value="{{ $tarefa->dh_inicio_triagem }}" placeholder="Data de início da triagem">
-                                                    <script>
-                                                    $(function() {
-                                                    $('#dh_inicio_triagem').datetimepicker({
-                                                    dateFormat: 'dd/mm/yy',
-                                                    showOtherMonths: true,
-                                                    selectOtherMonths: true,
-                                                    showButtonPanel:true,
-                                                    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-                                                    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-                                                    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-                                                    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-                                                    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-                                                    });
-                                                    });
-                                                    </script>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="control-label">Fechamento Triagem</label>
                                                     <input type="text" class="form-control" id="dh_fim_triagem" name="dh_fim_triagem" value="{{ $tarefa->dh_fim_triagem }}" placeholder="Data de fechamento da triagem">
-                                                    <script>
-                                                    $(function() {
-                                                    $('#dh_fim_triagem').datetimepicker({
-                                                    dateFormat: 'dd/mm/yy',
-                                                    showOtherMonths: true,
-                                                    selectOtherMonths: true,
-                                                    showButtonPanel:true,
-                                                    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-                                                    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-                                                    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-                                                    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-                                                    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-                                                    });
-                                                    });
-                                                    </script>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -273,110 +237,7 @@
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
-                                        <script>
-                                        $(document).ready(function() {
-                                        $('#tabs-3').on('click', "#bttriagens", function(e) {
-                                            e.preventDefault();
-                                            var formData = $('#form').serialize();
-                                            var formAction = $('#form').attr('action');
-                                            var formMethod = $('#form').attr('method');
-                                            $.ajaxSetup({
-                                            headers: {
-                                            'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
-                                            }
-                                            });
-                                            $.ajax({
-                                            type  : formMethod,
-                                            url   : formAction,
-                                            data  : formData,
-                                            cache : false,
-                                            success : function(data) {
-                                            $('#triagens').modal('show');
-                                            },
-                                            error : function() {
-                                            console.log('Erro executando atualização.')
-                                            }
-                                            });
-                                            return false; // prevent send form
-                                            });
-                                        $('#triagens').on('click', '#btnsvtriagem', function(e) {
-                                        e.preventDefault();
-                                        var formData = $('#formtri').serialize();
-                                        var dh_inicio_triagem = $('#dh_inicio_triagem').val();
-                                        var dh_fim_triagem = $('#dh_fim_triagem').val();
-                                        var id_usuario = $('#usutri').val();
-                                        if (!id_usuario > 0) {
-                                            alert('Selecione o usuário destino da triagem');
-                                        }
-                                        if (dh_fim_triagem < dh_inicio_triagem ){
-                                            alert('O horário de término deve ser maior que o de início');
-                                        } else {
-                                            
-                                        var formAction = $('#formtri').attr('action');
-                                        var formMethod = $('#formtri').attr('method');
-                                        $.ajaxSetup({
-                                        headers: {
-                                        'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
-                                        }
-                                        });
-                                        $.ajax({
-                                        type  : formMethod,
-                                        url   : formAction,
-                                        data  : formData,
-                                        cache : false,
 
-                                        success : function(data) {
-                                        $('#triagens').modal('hide');
-                                        $('#tbtriagens').load(location.href + ' #tbtriagens', 
-                                            function (responseText, status) {
-                                        $('#formtri')[0].reset();
-                                        if (!status == 'success') {
-                                        console.log('Falha recarregando a tabela');
-                                        }
-                                        });
-                                        },
-                                        error : function() {
-                                        console.log('Erro executando atualização.')
-                                        }
-                                        });
-                                        }                                        
-                                        return false; // prevent send form
-                                        });
-                                        $('#tbtriagens').on("click", ".btn-xs.btn.btn-danger",function(e) {
-                                            $('#modalconfirm').modal('show');
-                                            idTriagem = ($(this).attr("data-id"));
-                                        });
-                                        $('#modalconfirm').on("click", ".btn-primary", function(e) {
-
-                                            var formAction = '/triagens/'+idTriagem;
-                                            var formMethod = 'DELETE';
-
-                                            $.ajaxSetup({
-                                            headers: {
-                                            'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
-                                            }
-                                            });
-                                            $.ajax({
-                                            type  : formMethod,
-                                            url   : formAction,
-                                            data  : {id : idTriagem},
-                                            cache : false,
-
-                                            success : function(data) {
-                                            $('#modalconfirm').modal('hide');
-                                            $('#tbtriagens').load(location.href + ' #tbtriagens', function (responseText, status) {
-                                            if (!status == 'success') {
-                                            console.log('Falha recarregando a tabela');
-                                            }
-                                            });
-                                            },
-                                              error: function(xhr, textStatus, errorThrown) { 
-                                                        alert("Status: " + textStatus); alert("Error: " + errorThrown); 
-                                                    },
-                                            });
-                                            });
-                                        });
-                                        </script>
                             </form>
                             </div>
                         </div>
@@ -403,97 +264,5 @@
         </div>
     </div>
 </div>
-<style type="text/css" media="screen">
-.panel.with-nav-tabs .panel-heading{
-padding: 5px 5px 0 5px;
-}
-.panel.with-nav-tabs .nav-tabs{
-border-bottom: none;
-}
-.panel.with-nav-tabs .nav-justified{
-margin-bottom: -1px;
-}
-/********************************************************************/
-/*** PANEL DEFAULT ***/
-.with-nav-tabs.panel-default .nav-tabs > li > a,
-.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-color: #777;
-}
-.with-nav-tabs.panel-default .nav-tabs > .open > a,
-.with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
-.with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
-.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-color: #777;
-background-color: #ddd;
-border-color: transparent;
-}
-.with-nav-tabs.panel-default .nav-tabs > li.active > a,
-.with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
-.with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
-color: #555;
-background-color: #fff;
-border-color: #ddd;
-border-bottom-color: transparent;
-}
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
-background-color: #f5f5f5;
-border-color: #ddd;
-}
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
-color: #777;
-}
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-background-color: #ddd;
-}
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-color: #fff;
-background-color: #555;
-}
-/********************************************************************/
-/*** PANEL PRIMARY ***/
-.with-nav-tabs.panel-primary .nav-tabs > li > a,
-.with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
-.with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
-color: #fff;
-}
-.with-nav-tabs.panel-primary .nav-tabs > .open > a,
-.with-nav-tabs.panel-primary .nav-tabs > .open > a:hover,
-.with-nav-tabs.panel-primary .nav-tabs > .open > a:focus,
-.with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
-.with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
-color: #fff;
-background-color: #3071a9;
-border-color: transparent;
-}
-.with-nav-tabs.panel-primary .nav-tabs > li.active > a,
-.with-nav-tabs.panel-primary .nav-tabs > li.active > a:hover,
-.with-nav-tabs.panel-primary .nav-tabs > li.active > a:focus {
-color: #428bca;
-background-color: #fff;
-border-color: #428bca;
-border-bottom-color: transparent;
-}
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu {
-background-color: #428bca;
-border-color: #3071a9;
-}
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
-color: #fff;
-}
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-background-color: #3071a9;
-}
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-.with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-background-color: #4a9fe9;
-}
-}
-</style>
+
 @stop
