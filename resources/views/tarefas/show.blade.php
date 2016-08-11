@@ -197,7 +197,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <!-- Modal -->
+                        <!-- Modal  Triagem -->
                         <div id="triagens" role="dialog" class="modal fade" style="margin-top: 10%;">
                            <div class="modal-dialog">
                             <form name="form" role="form" id="formtri" action="{{ url('triagens') }}" method="post" accept-charset="utf-8">
@@ -304,16 +304,14 @@
                                         var formData = $('#formtri').serialize();
                                         var dh_inicio_triagem = $('#dh_inicio_triagem').val();
                                         var dh_fim_triagem = $('#dh_fim_triagem').val();
-                                        var id_usuario = $('#usutri').attr('selectedIndex');
-                                        alert(id_usuario);
+                                        var id_usuario = $('#usutri').val();
                                         if (!id_usuario > 0) {
                                             alert('Selecione o usuário destino da triagem');
                                         }
-
                                         if (dh_fim_triagem < dh_inicio_triagem ){
                                             alert('O horário de término deve ser maior que o de início');
-
                                         } else {
+                                            
                                         var formAction = $('#formtri').attr('action');
                                         var formMethod = $('#formtri').attr('method');
                                         $.ajaxSetup({
@@ -345,39 +343,58 @@
                                         return false; // prevent send form
                                         });
                                         $('#tbtriagens').on("click", ".btn-xs.btn.btn-danger",function(e) {
-                                        var confirma = confirm("Deseja realemente apagar este registro?");
-                                        if (confirma) {
-                                        var idTriagem = ($(this).attr("data-id"));
-                                        var formAction = '/triagens/'+idTriagem;
-                                        var formMethod = 'DELETE';
-                                        $.ajaxSetup({
-                                        headers: {
-                                        'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
-                                        }
+                                            $('#modalconfirm').modal('show');
+                                            idTriagem = ($(this).attr("data-id"));
                                         });
-                                        $.ajax({
-                                        type  : formMethod,
-                                        url   : formAction,
-                                        data  : {id : idTriagem},
-                                        cache : false,
+                                        $('#modalconfirm').on("click", ".btn-primary", function(e) {
 
-                                        success : function(data) {
-                                        $('#tbtriagens').load(location.href + ' #tbtriagens', function (responseText, status) {
-                                        if (!status == 'success') {
-                                        console.log('Falha recarregando a tabela');
-                                        }
-                                        });
-                                        },
-                                          error: function(xhr, textStatus, errorThrown) { 
-                                                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
-                                                },
-                                        });
-                                    }
-                                        return false;
-                                        });
+                                            var formAction = '/triagens/'+idTriagem;
+                                            var formMethod = 'DELETE';
+
+                                            $.ajaxSetup({
+                                            headers: {
+                                            'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
+                                            }
+                                            });
+                                            $.ajax({
+                                            type  : formMethod,
+                                            url   : formAction,
+                                            data  : {id : idTriagem},
+                                            cache : false,
+
+                                            success : function(data) {
+                                            $('#modalconfirm').modal('hide');
+                                            $('#tbtriagens').load(location.href + ' #tbtriagens', function (responseText, status) {
+                                            if (!status == 'success') {
+                                            console.log('Falha recarregando a tabela');
+                                            }
+                                            });
+                                            },
+                                              error: function(xhr, textStatus, errorThrown) { 
+                                                        alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+                                                    },
+                                            });
+                                            });
                                         });
                                         </script>
                             </form>
+                            </div>
+                        </div>
+                        <div id="modalconfirm" role="dialog" class="modal fade" style="margin-top :10%;">
+                            <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Confirma exclusão do Registro</h4>
+                                        </div>
+                                    <div class="modal-body bg-danger">
+                                        <p><strong>Deseja realmente exluir a triagem selecionada? Esta ação é irreversível</strong></p>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" id="btconfdel" class="btn btn-md btn-primary" >Confirma</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancela</button>
+                                    </div>
                             </div>
                         </div>
                     </div>
